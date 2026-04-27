@@ -8,7 +8,6 @@ from src.preprocessing import DataPreprocessor
 from src.features import FeatureEngineer
 
 
-
 # load pipeline
 with open("../model/pipeline.pkl", "rb") as f:
     pipeline = pickle.load(f)
