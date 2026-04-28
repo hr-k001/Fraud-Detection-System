@@ -18,43 +18,17 @@ A machine learning system for real-time fraud detection in banking transactions.
 pip install -r requirements.txt
 ```
 
-> Optional notebook dependencies for training and development:
->
-> ```bash
-> pip install -r requirements-notebook.txt
-> ```
-
 ### Windows long-path note
 
 If `pip install` fails with a long-path error, either enable Windows long path support or move the repo to a shorter path such as `C:\Fraud`.
 
-### 2. Train Models
+### 2. Start API Server
 
 ```bash
-jupyter notebook notebooks/training.ipynb
+python backend/app_simple.py
 ```
 
-Run all cells to generate trained models in the `model/` directory.
-
-### 3. Start API Server
-
-```bash
-python backend/app.py
-```
-
-API available at `http://localhost:8000`
-
-## 📊 Model Performance
-
-| Metric    | Random Forest | XGBoost   |
-| --------- | ------------- | --------- |
-| Accuracy  | 94.2%         | **95.1%** |
-| Precision | 91.3%         | **93.2%** |
-| Recall    | 89.1%         | **92.1%** |
-| F1-Score  | 90.2%         | **92.6%** |
-| ROC-AUC   | 0.949         | **0.963** |
-
----
+## API available at `http://localhost:8000`
 
 ## 🧠 Key Features
 
@@ -166,7 +140,7 @@ ROC-AUC: ~0.95-0.97
 
 ```bash
 # Clone repository
-cd /Users/mansidaksingh/capstone_project/Fraud-Detection-System
+https://github.com/hr-k001/Fraud-Detection-System.git
 
 # Create virtual environment
 python -m venv venv
@@ -176,26 +150,10 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 2. Generate Synthetic Data & Train Models
+### 2. Launch API Server
 
 ```bash
-# Run comprehensive training notebook
-jupyter notebook notebooks/comprehensive_training.ipynb
-```
-
-This notebook will:
-
-- Generate 15,000 synthetic transactions
-- Apply SMOTE for class balance
-- Train Random Forest and XGBoost models
-- Compare performance metrics
-- Generate SHAP explanations
-- Save trained models to `model/` directory
-
-### 3. Launch API Server
-
-```bash
-python backend/api.py
+python backend/api_simple.py
 ```
 
 Server starts at: `http://localhost:8000`
@@ -311,44 +269,6 @@ curl -X GET "http://localhost:8000/model_info"
 
 ---
 
-## 📁 Project Structure
-
-```
-Fraud-Detection-System/
-├── README.md                          # This file
-├── requirements.txt                   # Python dependencies
-│
-├── notebooks/
-│   ├── comprehensive_training.ipynb   # Full training pipeline (NEW!)
-│   └── training.ipynb                 # Original notebook
-│
-├── src/
-│   ├── __init__.py
-│   ├── preprocessing.py               # Data preprocessing
-│   ├── features.py                    # Feature engineering
-│   └── data_generator.py              # Synthetic data generation (NEW!)
-│
-├── backend/
-│   ├── api.py                         # FastAPI application (NEW!)
-│   ├── test_pipeline.py               # Pipeline testing
-│   └── __init__.py
-│
-├── model/
-│   ├── best_model.pkl                 # Trained model
-│   ├── scaler.pkl                     # Feature scaler
-│   ├── label_encoders.pkl             # Category encoders
-│   └── feature_names.pkl              # Feature list
-│
-├── examples/
-│   └── api_examples.py                # API usage examples (NEW!)
-│
-└── data/
-    ├── synthetic_transactions.csv      # Generated data (NEW!)
-    └── temporal_transactions.csv       # Temporal sequences (NEW!)
-```
-
----
-
 ## � API Endpoints Details
 
 ### POST /predict - Single Prediction
@@ -397,169 +317,6 @@ _Note: Exact values depend on random data generation and train-test split_
 
 ---
 
-## 🎯 Training Notebook Features
-
-The `comprehensive_training.ipynb` includes:
-
-1. **Fake Transaction Generator**
-   - Generates realistic synthetic data
-   - Configurable fraud ratio
-   - Various transaction patterns
-
-2. **Data Exploration**
-   - Statistical summaries
-   - Feature distributions
-   - Class imbalance visualization
-
-3. **SMOTE Implementation**
-   - Applied only to training data
-   - Prevents data leakage
-   - Balances minority class
-
-4. **Model Training**
-   - Random Forest configuration
-   - XGBoost configuration
-   - Performance evaluation
-
-5. **Model Comparison**
-   - Metric comparison tables
-   - ROC curve visualizations
-   - Confusion matrix analysis
-
-6. **SHAP Explainability**
-   - Global feature importance
-   - Individual prediction explanations
-   - Force plots and summary plots
-
-7. **API Preparation**
-   - Model serialization
-   - Preprocessing object saving
-   - FastAPI code generation
-
----
-
-## � Best Practices
-
-### Model Deployment
-
-- ✅ Always validate input data
-- ✅ Use consistent preprocessing pipeline
-- ✅ Monitor prediction drift over time
-- ✅ Log all predictions for audit trails
-- ✅ Set appropriate fraud thresholds per business needs
-
-### Data Handling
-
-- ✅ SMOTE applied only to training data
-- ✅ Test set keeps original imbalance ratio
-- ✅ Consistent feature scaling across train/test
-- ✅ Feature alignment prevents misalignment errors
-
-### Model Explainability
-
-- ✅ Use SHAP for transparent predictions
-- ✅ Provide top contributing features
-- ✅ Generate human-readable explanations
-- ✅ Document model decision boundaries
-
----
-
-## 🧪 Testing the API
-
-### Using Python Requests
-
-```python
-import requests
-
-response = requests.post(
-    "http://localhost:8000/predict",
-    json={
-        "TransactionAmt": 250.75,
-        "ProductCD": "W",
-        # ... other fields
-    }
-)
-print(response.json())
-```
-
-### Using Swagger UI
-
-Visit: `http://localhost:8000/docs`
-
-- Click on any endpoint
-- Enter parameters
-- Click "Try it out"
-
-### Using cURL (see examples/api_examples.py)
-
-Run: `python examples/api_examples.py`
-
----
-
-## 📝 Dependencies
-
-See `requirements.txt` for complete list:
-
-- pandas, numpy: Data processing
-- scikit-learn: ML utilities
-- xgboost: Gradient boosting
-- imbalanced-learn: SMOTE implementation
-- shap: Model explainability
-- fastapi, uvicorn: API server
-- matplotlib, seaborn: Visualization
-
----
-
-## 🚨 Troubleshooting
-
-### Models not found
-
-```
-Error: FileNotFoundError: model/best_model.pkl not found
-```
-
-**Solution:** Run the training notebook first to generate models
-
-### Port already in use
-
-```
-Error: Address already in use
-```
-
-**Solution:** Change port in api.py: `uvicorn.run(..., port=8001)`
-
-### Import errors
-
-```
-Error: No module named 'fastapi'
-```
-
-**Solution:** Install dependencies: `pip install -r requirements.txt`
-
----
-
-## 📧 API Response
-
-"card4": "visa",
-"card6": "credit",
-"addr1": 325,
-"addr2": 87
-}
-
-````
-
----
-
-### Output (JSON)
-```json
-{
-  "fraud": 0,
-  "fraud_probability": 0.30
-}
-````
-
----
-
 ### Notes
 
 - Only `TransactionAmt` is required
@@ -574,23 +331,45 @@ Error: No module named 'fastapi'
 fraud-detection-system/
 │
 ├── backend/
-│   ├── app.py
-│   └── test_pipeline.py
+│   ├── app_simple.py
+│   ├── database.py
+│   └── testing/
+│       ├── test_pipeline.py
+│       ├── test_cases.json
+│       └── results.txt
+│
+├── frontend/
+│   ├── index.html
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── vite.config.js
+│   ├── src/
+│   │   ├── App.jsx
+│   │   ├── main.jsx
+│   │   └── styles.css
+│   └── dist/  # generated frontend build output
 │
 ├── src/
-│   ├── preprocessing.py
-│   └── features.py
+│   ├── __init__.py
+│   ├── data_generator.py
+│   ├── features.py
+│   └── preprocessing.py
 │
 ├── model/
 │   └── pipeline.pkl
 │
-├── data/          (ignored in Git)
 ├── notebooks/
 │   └── training.ipynb
 │
+├── Dockerfile
+├── .dockerignore
+├── requirements.txt
+├── test_api.py
 ├── README.md
 └── .gitignore
 ```
+
+> Note: the `.env` file is used locally for Azure SQL configuration and is excluded from source control.
 
 ---
 
@@ -607,7 +386,8 @@ Download from Kaggle:
 
 - **Atia Naim** – ML Pipeline, Model Training
 - **Mansidak Singh** – Backend Integration
-- **Himanshu Kumar** – Frontend, Deployment
+- **Himanshu Kumar** – Project Integration, Frontend,  
+  Testing, Deployment
 
 ---
 
