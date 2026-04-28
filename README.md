@@ -13,43 +13,60 @@ A machine learning system for real-time fraud detection in banking transactions.
 ## 🚀 Quick Start
 
 ### 1. Install Dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
 
+> Optional notebook dependencies for training and development:
+>
+> ```bash
+> pip install -r requirements-notebook.txt
+> ```
+
+### Windows long-path note
+
+If `pip install` fails with a long-path error, either enable Windows long path support or move the repo to a shorter path such as `C:\Fraud`.
+
 ### 2. Train Models
+
 ```bash
 jupyter notebook notebooks/training.ipynb
 ```
+
 Run all cells to generate trained models in the `model/` directory.
 
 ### 3. Start API Server
+
 ```bash
 python backend/app.py
 ```
+
 API available at `http://localhost:8000`
 
 ## 📊 Model Performance
 
-| Metric | Random Forest | XGBoost |
-|--------|--------------|---------|
-| Accuracy | 94.2% | **95.1%** |
-| Precision | 91.3% | **93.2%** |
-| Recall | 89.1% | **92.1%** |
-| F1-Score | 90.2% | **92.6%** |
-| ROC-AUC | 0.949 | **0.963** |
+| Metric    | Random Forest | XGBoost   |
+| --------- | ------------- | --------- |
+| Accuracy  | 94.2%         | **95.1%** |
+| Precision | 91.3%         | **93.2%** |
+| Recall    | 89.1%         | **92.1%** |
+| F1-Score  | 90.2%         | **92.6%** |
+| ROC-AUC   | 0.949         | **0.963** |
 
 ---
 
 ## 🧠 Key Features
 
 ### 🔹 Synthetic Data Generation
+
 - **Realistic transaction patterns** with legitimate and fraudulent scenarios
 - **Configurable parameters** for fraud ratio, transaction amounts, merchant patterns
 - **Temporal sequences** for modeling user behavior over time
 - **Imbalanced dataset** (90% legitimate, 10% fraudulent)
 
 Example features generated:
+
 - Transaction amount, product category, time of day
 - Device type, operating system, browser
 - Merchant name, geographic location
@@ -58,6 +75,7 @@ Example features generated:
 ---
 
 ### 🔹 Data Preprocessing & Feature Engineering
+
 - **Memory optimization** (~50% reduction)
 - **Missing value handling**:
   - Numerical → Median imputation
@@ -69,12 +87,14 @@ Example features generated:
 ---
 
 ### 🔹 Class Imbalance Handling with SMOTE
+
 - **SMOTE Applied** to training data only (prevents data leakage)
 - **Balanced training set** (50-50 legitimate vs fraudulent)
 - **Unbalanced test set** for realistic evaluation
 - **Configuration**: k_neighbors=5 for synthetic sample generation
 
 Training set transformation:
+
 - Before SMOTE: 90% legitimate, 10% fraudulent
 - After SMOTE: 50% legitimate, 50% fraudulent
 
@@ -83,6 +103,7 @@ Training set transformation:
 ### 🔹 Model Training & Comparison
 
 #### Random Forest Classifier
+
 ```
 n_estimators: 200
 max_depth: 15
@@ -92,6 +113,7 @@ ROC-AUC: ~0.94-0.96
 ```
 
 #### XGBoost Classifier
+
 ```
 n_estimators: 200
 max_depth: 7
@@ -102,6 +124,7 @@ ROC-AUC: ~0.95-0.97
 ```
 
 **Evaluation Metrics:**
+
 - ROC-AUC (Area Under Receiver Operating Curve)
 - Precision (True Positives / All Positive Predictions)
 - Recall (True Positives / All Actual Positives)
@@ -112,6 +135,7 @@ ROC-AUC: ~0.95-0.97
 ---
 
 ### 🔹 Model Explainability with SHAP
+
 - **Global Feature Importance** - Mean absolute SHAP values
 - **Local Explanations** - Why a specific transaction is flagged
 - **Force Plots** - Visual breakdown of prediction contributions
@@ -124,15 +148,15 @@ ROC-AUC: ~0.95-0.97
 
 **Endpoints:**
 
-| Endpoint | Method | Purpose |
-|----------|--------|---------|
-| `/health` | GET | API health status |
-| `/predict` | POST | Single transaction prediction |
-| `/predict_batch` | POST | Batch predictions (up to 1000) |
-| `/predict_with_threshold` | POST | Custom fraud threshold |
-| `/model_info` | GET | Model metadata |
-| `/feature_info` | GET | Feature descriptions |
-| `/docs` | GET | Interactive API documentation (Swagger) |
+| Endpoint                  | Method | Purpose                                 |
+| ------------------------- | ------ | --------------------------------------- |
+| `/health`                 | GET    | API health status                       |
+| `/predict`                | POST   | Single transaction prediction           |
+| `/predict_batch`          | POST   | Batch predictions (up to 1000)          |
+| `/predict_with_threshold` | POST   | Custom fraud threshold                  |
+| `/model_info`             | GET    | Model metadata                          |
+| `/feature_info`           | GET    | Feature descriptions                    |
+| `/docs`                   | GET    | Interactive API documentation (Swagger) |
 
 ---
 
@@ -160,6 +184,7 @@ jupyter notebook notebooks/comprehensive_training.ipynb
 ```
 
 This notebook will:
+
 - Generate 15,000 synthetic transactions
 - Apply SMOTE for class balance
 - Train Random Forest and XGBoost models
@@ -188,6 +213,7 @@ You can test all endpoints directly in Swagger UI!
 ### Example 1: Single Prediction
 
 **Request:**
+
 ```bash
 curl -X POST "http://localhost:8000/predict" \\
   -H "Content-Type: application/json" \\
@@ -209,6 +235,7 @@ curl -X POST "http://localhost:8000/predict" \\
 ```
 
 **Response:**
+
 ```json
 {
   "prediction": 0,
@@ -231,6 +258,7 @@ curl -X POST "http://localhost:8000/predict" \\
 ### Example 2: Batch Prediction
 
 **Request:**
+
 ```bash
 curl -X POST "http://localhost:8000/predict_batch" \\
   -H "Content-Type: application/json" \\
@@ -244,24 +272,29 @@ curl -X POST "http://localhost:8000/predict_batch" \\
 ```
 
 **Response:**
+
 ```json
 {
   "total_transactions": 100,
   "fraud_count": 8,
   "legitimate_count": 92,
   "fraud_rate": 8.0,
-  "predictions": [ /* array of predictions */ ]
+  "predictions": [
+    /* array of predictions */
+  ]
 }
 ```
 
 ### Example 3: Get Model Information
 
 **Request:**
+
 ```bash
 curl -X GET "http://localhost:8000/model_info"
 ```
 
 **Response:**
+
 ```json
 {
   "model_type": "XGBClassifier",
@@ -321,6 +354,7 @@ Fraud-Detection-System/
 ### POST /predict - Single Prediction
 
 **Request Parameters:**
+
 - `TransactionAmt` (float, >0): Transaction amount in USD
 - `ProductCD` (string): Product code (W, H, S, C, R)
 - `DayOfWeek` (int, 0-6): Day of week (0=Monday)
@@ -336,6 +370,7 @@ Fraud-Detection-System/
 - `NumPreviousTxns` (int, ≥0): Number of previous transactions
 
 **Response:**
+
 - `prediction`: 0 (Legitimate) or 1 (Fraudulent)
 - `fraud_probability`: Probability score (0.0-1.0)
 - `confidence`: Confidence level (0.5-1.0)
@@ -350,15 +385,15 @@ Fraud-Detection-System/
 
 ### Comparison Results (on Test Set)
 
-| Metric | Random Forest | XGBoost |
-|--------|--------------|---------|
-| Accuracy | ~94% | ~95% |
-| Precision | ~91% | ~93% |
-| Recall | ~89% | ~92% |
-| F1-Score | ~90% | ~92% |
-| ROC-AUC | ~0.95 | ~0.96 |
+| Metric    | Random Forest | XGBoost |
+| --------- | ------------- | ------- |
+| Accuracy  | ~94%          | ~95%    |
+| Precision | ~91%          | ~93%    |
+| Recall    | ~89%          | ~92%    |
+| F1-Score  | ~90%          | ~92%    |
+| ROC-AUC   | ~0.95         | ~0.96   |
 
-*Note: Exact values depend on random data generation and train-test split*
+_Note: Exact values depend on random data generation and train-test split_
 
 ---
 
@@ -406,6 +441,7 @@ The `comprehensive_training.ipynb` includes:
 ## � Best Practices
 
 ### Model Deployment
+
 - ✅ Always validate input data
 - ✅ Use consistent preprocessing pipeline
 - ✅ Monitor prediction drift over time
@@ -413,12 +449,14 @@ The `comprehensive_training.ipynb` includes:
 - ✅ Set appropriate fraud thresholds per business needs
 
 ### Data Handling
+
 - ✅ SMOTE applied only to training data
 - ✅ Test set keeps original imbalance ratio
 - ✅ Consistent feature scaling across train/test
 - ✅ Feature alignment prevents misalignment errors
 
 ### Model Explainability
+
 - ✅ Use SHAP for transparent predictions
 - ✅ Provide top contributing features
 - ✅ Generate human-readable explanations
@@ -429,6 +467,7 @@ The `comprehensive_training.ipynb` includes:
 ## 🧪 Testing the API
 
 ### Using Python Requests
+
 ```python
 import requests
 
@@ -444,12 +483,15 @@ print(response.json())
 ```
 
 ### Using Swagger UI
+
 Visit: `http://localhost:8000/docs`
+
 - Click on any endpoint
 - Enter parameters
 - Click "Try it out"
 
 ### Using cURL (see examples/api_examples.py)
+
 Run: `python examples/api_examples.py`
 
 ---
@@ -457,6 +499,7 @@ Run: `python examples/api_examples.py`
 ## 📝 Dependencies
 
 See `requirements.txt` for complete list:
+
 - pandas, numpy: Data processing
 - scikit-learn: ML utilities
 - xgboost: Gradient boosting
@@ -470,32 +513,40 @@ See `requirements.txt` for complete list:
 ## 🚨 Troubleshooting
 
 ### Models not found
+
 ```
 Error: FileNotFoundError: model/best_model.pkl not found
 ```
+
 **Solution:** Run the training notebook first to generate models
 
 ### Port already in use
+
 ```
 Error: Address already in use
 ```
+
 **Solution:** Change port in api.py: `uvicorn.run(..., port=8001)`
 
 ### Import errors
+
 ```
 Error: No module named 'fastapi'
 ```
+
 **Solution:** Install dependencies: `pip install -r requirements.txt`
 
 ---
 
 ## 📧 API Response
-  "card4": "visa",
-  "card6": "credit",
-  "addr1": 325,
-  "addr2": 87
+
+"card4": "visa",
+"card6": "credit",
+"addr1": 325,
+"addr2": 87
 }
-```
+
+````
 
 ---
 
@@ -505,14 +556,15 @@ Error: No module named 'fastapi'
   "fraud": 0,
   "fraud_probability": 0.30
 }
-```
+````
 
 ---
 
 ### Notes
-- Only `TransactionAmt` is required  
-- Missing fields are automatically handled  
-- Unknown categories are safely encoded  
+
+- Only `TransactionAmt` is required
+- Missing fields are automatically handled
+- Unknown categories are safely encoded
 
 ---
 
@@ -542,7 +594,8 @@ fraud-detection-system/
 
 ---
 
-##  Dataset Note
+## Dataset Note
+
 Dataset is not included due to size limitations.
 
 Download from Kaggle:
@@ -551,17 +604,17 @@ Download from Kaggle:
 ---
 
 ## Contributors
-- **Atia Naim** – ML Pipeline, Model Training 
-- **Mansidak Singh** – Backend Integration 
-- **Himanshu Kumar** – Frontend, Deployment  
+
+- **Atia Naim** – ML Pipeline, Model Training
+- **Mansidak Singh** – Backend Integration
+- **Himanshu Kumar** – Frontend, Deployment
 
 ---
 
 ## Future Improvements
-- Hyperparameter tuning  
-- Advanced feature engineering  
-- Real-time streaming pipeline  
-- Cloud deployment (Azure)  
-- Interactive fraud dashboard  
 
-
+- Hyperparameter tuning
+- Advanced feature engineering
+- Real-time streaming pipeline
+- Cloud deployment (Azure)
+- Interactive fraud dashboard

@@ -6,7 +6,6 @@ __pycache__/
 .Python
 build/
 develop-eggs/
-dist/
 downloads/
 eggs/
 .eggs/
@@ -19,6 +18,11 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+
+# Node / frontend
+node_modules/
+frontend/node_modules/
+frontend/dist/
 
 # Virtual environments
 venv/
@@ -42,7 +46,7 @@ env/
 Thumbs.db
 
 # Models (generated during training)
-model/*.pkl
+
 model/scaler.pkl
 model/encoder.pkl
 model/model.pkl

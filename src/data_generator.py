@@ -8,6 +8,7 @@ Creates realistic patterns with various transaction types, amounts, and user beh
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
+from pathlib import Path
 from typing import Tuple, Dict, List
 import random
 
@@ -210,11 +211,13 @@ class FakeTransactionGenerator:
 def main():
     """Generate and save sample datasets."""
     generator = FakeTransactionGenerator(seed=42)
+    data_dir = Path(__file__).resolve().parent.parent / "data"
+    data_dir.mkdir(exist_ok=True)
     
     # Generate basic dataset
     print("Generating basic transaction dataset...")
     df_basic = generator.generate_transactions(n_samples=10000, fraud_ratio=0.1)
-    df_basic.to_csv('/Users/mansidaksingh/capstone_project/Fraud-Detection-System/data/synthetic_transactions.csv', index=False)
+    df_basic.to_csv(data_dir / 'synthetic_transactions.csv', index=False)
     print(f"Generated {len(df_basic)} transactions")
     print(f"Fraud ratio: {df_basic['isFraud'].mean():.2%}")
     print(df_basic.head())
@@ -223,7 +226,7 @@ def main():
     # Generate temporal sequences
     print("Generating temporal transaction sequences...")
     df_temporal = generator.generate_temporal_sequences(n_users=500, transactions_per_user=30)
-    df_temporal.to_csv('/Users/mansidaksingh/capstone_project/Fraud-Detection-System/data/temporal_transactions.csv', index=False)
+    df_temporal.to_csv(data_dir / 'temporal_transactions.csv', index=False)
     print(f"Generated {len(df_temporal)} transactions for {df_temporal['UserID'].nunique()} users")
     print(f"Fraud ratio: {df_temporal['isFraud'].mean():.2%}")
     print(df_temporal.head())
